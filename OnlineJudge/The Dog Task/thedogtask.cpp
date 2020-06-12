@@ -78,11 +78,9 @@ int fk(map<int, map<int, int>> &graph, int n, int m)
         {
 
             u = parent[v];
-            printf("from v=%d to u=%d.  Graph[u][v] = %d,  graph[v][u] = %d\n", v, u, graph[u][v], graph[v][u]);
             min_flow = min(graph[u][v], min_flow);
             v = u;
         }
-        printf("Minflow found was %d\n", min_flow);
         v = target;
         while (v != source)
         {
@@ -168,25 +166,35 @@ int main()
                                                    datasetAux.bobRoute[i + 1].x, datasetAux.bobRoute[i + 1].y);
                 if (distance_i_j + distance_j_nextI <= distance_i_nextI * 2)
                 {
-                    printf("i= %d(%d) to j=%d(%d)  is possible \n", i, i + 1, j, datasetAux.n + 1 + j);
+                    //printf("i= %d(%d) to j=%d(%d)  is possible \n", i, i + 1, j, datasetAux.n + 1 + j);
                     graph[i + 1][datasetAux.n + 1 + j] = 1;
                     graph[datasetAux.n + 1 + j][i + 1] = 0;
                 }
             }
         }
-
-        printf("%d\n", fk(graph, datasetAux.n, datasetAux.m)); // Algoritmo ford fulkerson que ira alterar o grafo
-                                                               //printPath(); //Printar o caminho enquanto olhamos o grafo residual.
-
-        for (int u = 5; u <= 9; u++)
+        fk(graph, datasetAux.n, datasetAux.m);
+        
+        // Choose path
+        vector<point2d> output;
+        for(int y=0; y<datasetAux.n; y++)
         {
-            for (auto it = graph[u].begin(); it != graph[u].end(); it++)
+            // Add Bob vertex i
+            output.push_back(datasetAux.bobRoute[y]);
+            // Try to find interesting point in the middle
+            for (int u = datasetAux.n+1; u <= datasetAux.n+datasetAux.m; u++)
             {
-                int v = it->first;
-                int f = it->second;
-                printf("graph[%d][%d] = %d\n", u, v, f);
+                if(graph[u][y+1] == 1){
+                    output.push_back(datasetAux.ralphRoute[u-datasetAux.n-1]);
+                }
             }
         }
+
+        // Output
+        cout << output.size() << endl;
+        for(int y=0; y<output.size(); y++){
+            cout << output[y].x << " " << output[y].y << " ";
+        }
+        cout << endl;
     }
     return 0;
 }
