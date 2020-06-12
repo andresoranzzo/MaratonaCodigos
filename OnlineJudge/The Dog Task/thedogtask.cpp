@@ -38,7 +38,6 @@ bool bfs(vector<int> graph[], int n, int m, int source, int target, map<int, int
     while (!q.empty())
     {
         u = q.front();
-        cout << "u: " << u << endl;
         q.pop();
         if (visited[u] == 1)
         {
@@ -158,6 +157,7 @@ int main()
         
         // Choose path
         vector<point2d> output;
+        vector<int> visitedPoints(datasetAux.m, 0);
         for(int y=0; y<datasetAux.n; y++)
         {
             // Add Bob vertex i
@@ -165,8 +165,15 @@ int main()
             // Try to find interesting point in the middle
             for (int u = 0; u<graph[y+1].size(); u++)
             {
-                output.push_back(datasetAux.ralphRoute[graph[y+1][u]-datasetAux.n]);
-                break;
+                int pointRalph = graph[y+1][u]-datasetAux.n;
+                if(visitedPoints[pointRalph] == 0){
+                    cout << "visited " << pointRalph << " " << visitedPoints[pointRalph] << endl;
+                    output.push_back(datasetAux.ralphRoute[graph[y+1][u]-datasetAux.n]);
+                    visitedPoints[pointRalph] = 1;
+                    cout << "visited " << pointRalph << " " << visitedPoints[pointRalph] << endl;
+                    break;
+                }
+                
             }
         }
 
