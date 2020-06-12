@@ -82,7 +82,7 @@ int fk(map<int, map<int, int>> &graph, int n, int m)
             min_flow = min(graph[u][v], min_flow);
             v = u;
         }
-        printf("Minflow found was %d\n",min_flow);
+        printf("Minflow found was %d\n", min_flow);
         v = target;
         while (v != source)
         {
@@ -156,8 +156,6 @@ int main()
             // check if we can go to jth-interest place and go back to i+1-th place
             //double distance(int x1, int y1, int x2, int y2)
 
-            //    distance_i_next_i* 2 >=   distance_pro_interessante  + distance_do_interessante_pro_proximo;
-
             double distance_i_nextI = distance(datasetAux.bobRoute[i].x, datasetAux.bobRoute[i].y,
                                                datasetAux.bobRoute[i + 1].x, datasetAux.bobRoute[i + 1].y);
 
@@ -180,46 +178,15 @@ int main()
         printf("%d\n", fk(graph, datasetAux.n, datasetAux.m)); // Algoritmo ford fulkerson que ira alterar o grafo
                                                                //printPath(); //Printar o caminho enquanto olhamos o grafo residual.
 
-        
-
-
-        //for(int u = 0; u <= datasetAux.n+ datasetAux.m+1; u++){
-            for(int u = 5; u <=9; u++){
-            for (auto it = graph[u].begin(); it != graph[u].end(); it++){
+        for (int u = 5; u <= 9; u++)
+        {
+            for (auto it = graph[u].begin(); it != graph[u].end(); it++)
+            {
                 int v = it->first;
                 int f = it->second;
                 printf("graph[%d][%d] = %d\n", u, v, f);
             }
         }
-        /*
-        for (int i = 0; i < datasetAux.n - 1; i++)
-        {
-            for (int j = 0; j < datasetAux.m; j++)
-            {
-                if (graph[i + 1][datasetAux.n + j + 1] == 1)
-                {
-                    printf("We can go from BOB %d to Ralph %d\n", i, j);
-                }
-            }
-        }/*
-
-        dataset.push_back(datasetAux);
-    }
-    //print
-    /*
-    
-    for(i=0; i<dataset.size(); i++){
-        cout << dataset[i].n << " " << dataset[i].m << endl;
-        for(j=0; j<dataset[i].bobRoute.size(); j++){
-            cout << dataset[i].bobRoute[j].x << " " << dataset[i].bobRoute[j].y << " ";
-        }
-        cout << endl;
-        for(j=0; j<dataset[i].ralphRoute.size(); j++){
-            cout << dataset[i].ralphRoute[j].x << " " << dataset[i].ralphRoute[j].y << " ";
-        }
-        cout << endl;
-
-    }*/
     }
     return 0;
 }
