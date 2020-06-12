@@ -2,6 +2,7 @@
 using namespace std;
 
 /*
+Example:
 1
 4 5
 1 4 5 7 5 2 -2 4
@@ -25,6 +26,7 @@ double distance(int x1, int y1, int x2, int y2)
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
 }
 
+// O(V + E)
 bool bfs(map<int, map<int, int>> &graph, int n, int m, int source, int target, map<int, int> &parent)
 {
     parent.clear();
@@ -41,7 +43,6 @@ bool bfs(map<int, map<int, int>> &graph, int n, int m, int source, int target, m
         {
             continue;
         }
-        //   printf("Visiting node %d\n", u);
         visited[u] = 1;
         if (u == target)
         {
@@ -53,7 +54,6 @@ bool bfs(map<int, map<int, int>> &graph, int n, int m, int source, int target, m
             f = it->second;
             if (f == 1)
             {
-                //    printf(" Adicionando na fila a partir do %d -> %d\n", u, v);
                 parent[v] = u;
                 q.push(v);
             }
@@ -62,6 +62,7 @@ bool bfs(map<int, map<int, int>> &graph, int n, int m, int source, int target, m
     return false;
 }
 
+// O(max_flor * E)
 int fk(map<int, map<int, int>> &graph, int n, int m)
 {
     int source = 0;
@@ -103,6 +104,7 @@ int main()
     vector<dataset> dataset;
     map<int, map<int, int>> graph;
     cin >> l;
+    // O(l)
     for (z = 0; z < l; z++)
     {
         cout << endl; //blank line between datasets
