@@ -27,7 +27,7 @@ double distance(int x1, int y1, int x2, int y2)
 }
 
 // O(V + E)
-bool bfs(map<int, map<int, int>> &graph, int n, int m, int source, int target, map<int, int> &parent)
+bool bfs(vector<int> graph[], int n, int m, int source, int target, map<int, int> &parent)
 {
     parent.clear();
     queue<int> q;
@@ -38,6 +38,7 @@ bool bfs(map<int, map<int, int>> &graph, int n, int m, int source, int target, m
     while (!q.empty())
     {
         u = q.front();
+        cout << "u: " << u << endl;
         q.pop();
         if (visited[u] == 1)
         {
@@ -48,22 +49,23 @@ bool bfs(map<int, map<int, int>> &graph, int n, int m, int source, int target, m
         {
             return true;
         }
-        for (auto it = graph[u].begin(); it != graph[u].end(); it++)
-        {
-            v = it->first;
-            f = it->second;
-            if (f == 1)
-            {
-                parent[v] = u;
-                q.push(v);
+        // for all edges in G.adjacentEdges()
+        for(int p=0; p<graph[u].size(); p++){
+            v = graph[u][p];
+            //cout << "v: " << v << " | v+n+1: " << v+n+1 << endl;
+            if(v+n+1 <= n+m+1){
+                parent[v + n + 1] = u;
+                // Adjust vertex to correct graph format
+                q.push(v + n + 1);
             }
+            
         }
     }
     return false;
 }
 
 // O(max_flor * E)
-int fk(map<int, map<int, int>> &graph, int n, int m)
+int fk(vector<int> graph[], int n, int m)
 {
     int source = 0;
     int target = n + m + 1;
@@ -102,54 +104,33 @@ int main()
     dataset datasetAux;
     point2d pointAux;
     vector<dataset> dataset;
-    map<int, map<int, int>> graph;
     cin >> l;
     // O(l)
     for (z = 0; z < l; z++)
     {
         cout << endl; //blank line between datasets
-        graph.clear();
-        //graph size =  START + TARGET + BOB + RALHP =  2 + n+ m
-        // 0 -> START
-        // [1,n] -> Bob`s vertices
-        // [n+1, n+m] -> Ralph`s vertices
-        // n+m+1 -> TARGET
         cin >> datasetAux.n >> datasetAux.m;
+        //Create graph
+        vector<int> graph[datasetAux.n + datasetAux.m + 2];
         //read bob's route
         datasetAux.bobRoute.clear();
         for (j = 0; j < datasetAux.n; j++)
         {
             cin >> pointAux.x >> pointAux.y;
             datasetAux.bobRoute.push_back(pointAux);
+            // Link Source to all Bob`s vertex.
+            graph[0].push_back(j+1);
         }
+
         datasetAux.ralphRoute.clear();
         for (j = 0; j < datasetAux.m; j++)
         {
             cin >> pointAux.x >> pointAux.y;
             datasetAux.ralphRoute.push_back(pointAux);
+            // Link Ralph`s vertices to Target.
+            graph[datasetAux.n+j+1].push_back(datasetAux.n+datasetAux.m+1);
         }
 
-        // Link Source to all Bob`s vertex.
-        for (int i = 1; i <= datasetAux.n; i++)
-        {
-            if (i == datasetAux.n)
-            {
-                graph[0][i] = 0;
-                graph[i][0] = 0;
-            }
-            else
-            {
-                graph[0][i] = 1;
-                graph[i][0] = 0;
-            }
-        }
-
-        // Link Ralph`s vertices to Target.
-        for (int i = datasetAux.n + 1; i <= datasetAux.n + datasetAux.m; i++)
-        {
-            graph[i][datasetAux.n + datasetAux.m + 1] = 1;
-            graph[datasetAux.n + datasetAux.m + 1][i] = 0;
-        }
         // Link Bob`s vertices to Ralph`s vertices.
         for (int i = 0; i < datasetAux.n - 1; i++)
         {
@@ -168,12 +149,11 @@ int main()
                                                    datasetAux.bobRoute[i + 1].x, datasetAux.bobRoute[i + 1].y);
                 if (distance_i_j + distance_j_nextI <= distance_i_nextI * 2)
                 {
-                    //printf("i= %d(%d) to j=%d(%d)  is possible \n", i, i + 1, j, datasetAux.n + 1 + j);
-                    graph[i + 1][datasetAux.n + 1 + j] = 1;
-                    graph[datasetAux.n + 1 + j][i + 1] = 0;
+                    graph[i + 1].push_back(datasetAux.n + 1 + j);
                 }
             }
         }
+
         fk(graph, datasetAux.n, datasetAux.m);
         
         // Choose path
@@ -183,11 +163,10 @@ int main()
             // Add Bob vertex i
             output.push_back(datasetAux.bobRoute[y]);
             // Try to find interesting point in the middle
-            for (int u = datasetAux.n+1; u <= datasetAux.n+datasetAux.m; u++)
+            for (int u = 0; u<graph[y+1].size(); u++)
             {
-                if(graph[u][y+1] == 1){
-                    output.push_back(datasetAux.ralphRoute[u-datasetAux.n-1]);
-                }
+                output.push_back(datasetAux.ralphRoute[graph[y+1][u]-datasetAux.n]);
+                break;
             }
         }
 
