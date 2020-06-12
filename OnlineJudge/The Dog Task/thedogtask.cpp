@@ -167,10 +167,8 @@ int main()
             {
                 int pointRalph = graph[y+1][u]-datasetAux.n;
                 if(visitedPoints[pointRalph] == 0){
-                    cout << "visited " << pointRalph << " " << visitedPoints[pointRalph] << endl;
                     output.push_back(datasetAux.ralphRoute[graph[y+1][u]-datasetAux.n]);
                     visitedPoints[pointRalph] = 1;
-                    cout << "visited " << pointRalph << " " << visitedPoints[pointRalph] << endl;
                     break;
                 }
                 
