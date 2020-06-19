@@ -7,7 +7,6 @@ Example:
 4 5
 1 4 5 7 5 2 -2 4
 -4 -2 3 9 1 2 -1 3 8 -3
-
 */
 
 struct point2d
@@ -27,7 +26,7 @@ double distance(int x1, int y1, int x2, int y2)
 }
 
 // O(V + E)
-bool bfs(vector<int> graph[], int n, int m, int source, int target, map<int, int> &parent)
+bool bfs(vector<vector<int>> graph, int n, int m, int source, int target, map<int, int> &parent)
 {
     parent.clear();
     queue<int> q;
@@ -64,7 +63,7 @@ bool bfs(vector<int> graph[], int n, int m, int source, int target, map<int, int
 }
 
 // O(max_flor * E)
-int fk(vector<int> graph[], int n, int m)
+int fk(vector<vector<int>> graph, int n, int m)
 {
     int source = 0;
     int target = n + m + 1;
@@ -110,36 +109,36 @@ int main()
         cout << endl; //blank line between datasets
         cin >> datasetAux.n >> datasetAux.m;
         //Create graph
-        vector<int> graph[datasetAux.n + datasetAux.m + 2];
+        //vector<int> graph[datasetAux.n + datasetAux.m + 2];
+        vector<vector<int>> graph(datasetAux.n+datasetAux.m+2, vector<int>(datasetAux.n+datasetAux.m+2, 0));  
         //read bob's route
         datasetAux.bobRoute.clear();
-        for (j = 0; j < datasetAux.n; j++)
+        for (j = 1; j <= datasetAux.n; j++)
         {
             cin >> pointAux.x >> pointAux.y;
             datasetAux.bobRoute.push_back(pointAux);
             // Link Source to all Bob`s vertex.
-            graph[0].push_back(j+1);
+            graph[0][j] = 1;
         }
 
         datasetAux.ralphRoute.clear();
-        for (j = 0; j < datasetAux.m; j++)
+        for (j = datasetAux.n+1; j <=  datasetAux.n+datasetAux.m; j++)
         {
             cin >> pointAux.x >> pointAux.y;
             datasetAux.ralphRoute.push_back(pointAux);
             // Link Ralph`s vertices to Target.
-            graph[datasetAux.n+j+1].push_back(datasetAux.n+datasetAux.m+1);
+            graph[j][datasetAux.n+datasetAux.m] = 1;
         }
 
         // Link Bob`s vertices to Ralph`s vertices.
-        for (int i = 0; i < datasetAux.n - 1; i++)
+        for (int i = 0; i < datasetAux.n-1; i++)
         {
             // check if we can go to jth-interest place and go back to i+1-th place
             //double distance(int x1, int y1, int x2, int y2)
-
             double distance_i_nextI = distance(datasetAux.bobRoute[i].x, datasetAux.bobRoute[i].y,
                                                datasetAux.bobRoute[i + 1].x, datasetAux.bobRoute[i + 1].y);
 
-            for (int j = 0; j < datasetAux.m; j++)
+            for (int j = 0; j < datasetAux.ralphRoute.size(); j++)
             {
                 double distance_i_j = distance(datasetAux.bobRoute[i].x, datasetAux.bobRoute[i].y,
                                                datasetAux.ralphRoute[j].x, datasetAux.ralphRoute[j].y);
